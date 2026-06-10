@@ -27,7 +27,7 @@ weather_df['Humidity'] = weather_df['Humidity'].str.replace('%', '')
 weather_df['Dew point'] = weather_df['Dew point'].str.replace('°F', '')
 weather_df = weather_df.rename(columns={"Dew point": "dew_point", "Day Temperature, °F": "day_temp", "Night Temperature, °F": "night_temp", "Wind speed, mph": "wind_speed", "Wind direction": "wind_direction"})
 
-print(weather_df)
+
 
 with sqlite3.connect('weather_data.db') as conn:
     cursor = conn.cursor()
