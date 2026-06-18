@@ -16,16 +16,21 @@ weather_df['Wind'] = weather_df['Wind'].str.replace(' ↑ ', ', ')
 weather_df['Wind speed, mph'] = weather_df['Wind'].str.split(",").str[0].str.strip() # split wind into to data columns for speed and direction
 weather_df['Wind direction'] = weather_df['Wind'].str.split(",").str[1].str.strip()
 weather_df['Wind direction'] = weather_df['Wind direction'].str.replace('from ', '')
+weather_df['Wind direction'] = weather_df['Wind direction'].fillna('No wind')
+
 weather_df['Wind speed, mph'] = weather_df['Wind speed, mph'].str.replace("mph", '').str.strip()
 weather_df['Wind speed, mph'] = weather_df['Wind speed, mph'].replace({'No wind': 0})
 weather_df['Wind speed, mph'] = weather_df['Wind speed, mph'].astype(float)
 weather_df = weather_df.drop(columns=['Temperature','Wind', 'Location'])
 weather_df['Date'] = pd.to_datetime(weather_df['Date'], format= '%b %d, %Y at %I:%M %p', errors='coerce')
-weather_df['Visibility'] = weather_df['Visibility'].str.replace('mi', '')
-weather_df['Pressure'] = weather_df['Pressure'].str.replace('"Hg', '')
+weather_df['Visibility'] = weather_df['Visibility'].str.replace('mi', '').astype(float)
+weather_df['Visibility'] = weather_df['Visibility'].fillna(weather_df['Visibility'].max())
+weather_df['Pressure'] = weather_df['Pressure'].str.extract(r'^(\S+)').astype(float)
 weather_df['Humidity'] = weather_df['Humidity'].str.replace('%', '')
-weather_df['Dew point'] = weather_df['Dew point'].str.replace('°F', '')
+weather_df['Dew point'] = weather_df['Dew point'].str.replace('°F', '').astype(int)
 weather_df = weather_df.rename(columns={"Dew point": "dew_point", "Day Temperature, °F": "day_temp", "Night Temperature, °F": "night_temp", "Wind speed, mph": "wind_speed", "Wind direction": "wind_direction"})
+weather_df.drop_duplicates()
+print(weather_df.head(10))
 
 
 
